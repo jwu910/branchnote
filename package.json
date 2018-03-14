@@ -18,7 +18,10 @@
     "delete",
     "delete-branch"
   ],
-  "author": "jwu910",
+  "bin": {
+    "branchnote": "index.js"
+  },
+  "author": "Joshua Wu",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jwu910/branchnote/issues"
