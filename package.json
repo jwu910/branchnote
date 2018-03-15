@@ -28,8 +28,8 @@
   },
   "homepage": "https://github.com/jwu910/branchnote#readme",
   "dependencies": {
-    "blessed": "^0.1.81",
     "chalk": "^2.3.2",
+    "prompts": "^0.1.8",
     "update-notifier": "^2.3.0"
   }
 }
