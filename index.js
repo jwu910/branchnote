@@ -11,8 +11,10 @@ if (notifier.update) {
 
 const git = require('./utils/git');
 
-git.buildListArray().then(result => {
-    console.log(result)
+git.buildListArray().then(result => {	
+	git.filterDiffs(result).then(res => {console.log(res)});
+
+
 });
 
 

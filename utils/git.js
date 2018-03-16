@@ -88,26 +88,51 @@ async function _formatRefs(output) {
     const currLine = line.split('/');
     const isLocal = currLine[1] === 'heads' ? true : false;
 
-    const currRemote = isLocal ? 'local' : currLine[currLine.length - 2];
-    const currBranch = currLine[currLine.length - 1];
-
-    const selected = currBranch === selectedBranch && isLocal ? '*' : ' ';
-
-    if (currLine[currLine.length - 1] === 'HEAD') {
+    if (currLine[currLine.length - 2].trim() === 'HEAD') {
       return;
     }
 
-    retVal.push([selected, currRemote, currBranch, line]);
+    const currRemote = isLocal ? 'local' : currLine[currLine.length - 3].trim();
+    const currBranch = currLine[currLine.length - 2].trim();
+    const lastCommit = currLine[currLine.length - 1].trim();
+    const selected = currBranch === selectedBranch && isLocal ? '*' : ' ';
+
+    retVal.push([selected, currRemote, currBranch, lastCommit]);
   });
 
   return retVal;
+}
+
+async function filterDiffs(branches) {
+  var retVal = [];
+
+  branches.forEach(branch => {
+    if (branch[1] === 'local') {
+      console.log('branch is ', branch);
+      branches.map(row => {
+        if (row[1] === 'local') {
+          return;
+        } else if (row[2] === branch[2]) {
+          branch.push(row[1]);
+        } else {
+          branch.push('localOnly');
+        }
+      });
+    }
+  });
+
+  return branches;
 }
 
 async function getRemotes() {
   /*
   Function call to get list of branch refs formatted by ref name.
   */
-  const args = ['for-each-ref', '--sort=refname', '--format=%(refname)'];
+  const args = [
+    'for-each-ref',
+    '--sort=refname',
+    '--format=%(refname) /%(committerdate:relative)',
+  ];
   const retVal = await execGit(args).then(_formatRefs);
 
   return retVal;
@@ -119,4 +144,5 @@ module.exports = {
   createBranch: createBranch,
   currentBranch: currentBranch,
   fetchBranches: fetchBranches,
+  filterDiffs: filterDiffs,
 };
