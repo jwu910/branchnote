@@ -123,6 +123,7 @@ async function filterDiffs(branches) {
       retVal.push(branch);
     }
   });
+
   return retVal;
 }
 

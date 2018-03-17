@@ -26,7 +26,10 @@ git.buildListArray()
           choices: choices,
           initial: 1,
           max: choices.length - 1,
-          hint: '- Space to select. Return to submit'
+          hint: 
+            chalk.green('[local]') + '/' + 
+            chalk.yellow('[origin]') +
+            ' - Space to select. Return to submit'
         };
 
         let response = prompts(question);
@@ -34,11 +37,11 @@ git.buildListArray()
       });
   });
 
-
-
-// Build branch list
-// Print branch list to prompt
 // branches should be present on local, but not on origin
+  // if branch exists on origin, delete?
+
+// Should user only be able to delete local branches?
+
 // change view to view prompts on origin vs local
 // Sade - pass flags for local or origin
 
