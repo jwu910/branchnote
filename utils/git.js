@@ -108,19 +108,22 @@ async function filterDiffs(branches) {
 
   branches.forEach(branch => {
     if (branch[1] === 'local') {
-      branches.map(row => {
-        if (row[1] === 'local') {
-          return;
-        } else if (row[2] === branch[2]) {
-          branch.push(row[1]);
-        } else {
-          branch.push('localOnly');
+      let currBranch = branch;
+
+      branches.forEach(line => {
+        if (line[1] !== 'local' && line[2] === currBranch[2]) {
+          branch.push(line[1]);
         }
       });
+
+      if (branch.length < 5) {
+        branch.push('localOnly');
+      }
+
+      retVal.push(branch);
     }
   });
-
-  return branches;
+  return retVal;
 }
 
 async function getRemotes() {
@@ -129,7 +132,7 @@ async function getRemotes() {
   */
   const args = [
     'for-each-ref',
-    '--sort=refname',
+    '--sort=committerdate',
     '--format=%(refname) /%(committerdate:relative)',
   ];
   const retVal = await execGit(args).then(_formatRefs);

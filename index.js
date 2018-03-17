@@ -10,17 +10,29 @@ if (notifier.update) {
 }
 
 const git = require('./utils/git');
+const { populateList } = require('./utils/prompts');
+// const support = require('./utils/support');
 
-git.buildListArray().then(result => {
-    git.filterDiffs(result).then(res => {
-        console.log(res);
+git.buildListArray()
+  .then(result => {
+    git.filterDiffs(result)
+      .then( res => {
+        const choices = populateList(res);
 
-        const test = res.filter(res[1].indexOf('local') > 0);
+        const question = {
+          type: 'multiselect',
+          name: 'value',
+          message: 'Select branches to delete',
+          choices: choices,
+          initial: 1,
+          max: choices.length - 1,
+          hint: '- Space to select. Return to submit'
+        };
 
-        console.log(test);
-    });
+        let response = prompts(question);
 
-});
+      });
+  });
 
 
 
