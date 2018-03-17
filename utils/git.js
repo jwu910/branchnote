@@ -108,7 +108,6 @@ async function filterDiffs(branches) {
 
   branches.forEach(branch => {
     if (branch[1] === 'local') {
-      console.log('branch is ', branch);
       branches.map(row => {
         if (row[1] === 'local') {
           return;

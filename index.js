@@ -11,9 +11,14 @@ if (notifier.update) {
 
 const git = require('./utils/git');
 
-git.buildListArray().then(result => {	
-	git.filterDiffs(result).then(res => {console.log(res)});
+git.buildListArray().then(result => {
+    git.filterDiffs(result).then(res => {
+        console.log(res);
 
+        const test = res.filter(res[1].indexOf('local') > 0);
+
+        console.log(test);
+    });
 
 });
 
