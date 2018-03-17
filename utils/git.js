@@ -4,15 +4,6 @@ function buildListArray(refs) {
   return getRemotes();
 }
 
-async function createBranch(branch) {
-  /*
-  Create branch
-  */
-  const args = ['checkout', '-b', branch];
-
-  await execGit(args);
-}
-
 async function currentBranch() {
   /*
   Return name of current branch.
@@ -26,13 +17,22 @@ async function currentBranch() {
 
 async function deleteBranch(branch) {
   /*
-  Delete all branches in passed array.
+  Delete branch.
   */
   const args = ['branch', '-d', branch]
 
   await execGit(args);
 }
 
+async function forceDeleteBranch(branch) {
+  /*
+  Force delete branch.
+  */
+
+  const args = ['branch', '-D', branch];
+
+  await execGit(args);
+}
 
 function execGit(args) {
   /*
@@ -141,9 +141,9 @@ async function getRemotes() {
 
 module.exports = {
   buildListArray,
-  createBranch,
   currentBranch,
   deleteBranch,
   fetchBranches,
+  forceDeleteBranch,
   filterDiffs,
 };
