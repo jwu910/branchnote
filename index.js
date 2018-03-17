@@ -48,41 +48,53 @@ async function confirmDelete(res, item) {
   }
 }
 
-git.buildListArray().then(result => {
-  git.filterDiffs(result).then(async res => {
-    const choices = populateList(res);
+git
+  .buildListArray()
+  .then(result => {
+    git.filterDiffs(result).then(async res => {
+      const choices = populateList(res);
 
-    const question = {
-      choices: choices,
-      hint:
-        chalk.green('[local]') +
-        '/' +
-        chalk.yellow('[origin]') +
-        ' - Space to select. Return to submit',
-      initial: 1,
-      max: choices.length - 1,
-      message: 'Select branches to delete',
-      name: 'value',
-      type: 'multiselect',
-    };
+      const question = {
+        choices: choices,
+        hint:
+          chalk.green('[local]') +
+          '/' +
+          chalk.yellow('[origin]') +
+          ' - Space to select. Return to submit',
+        initial: 1,
+        max: choices.length - 1,
+        message: 'Select branches to delete',
+        name: 'value',
+        type: 'multiselect',
+      };
 
-    let questionDeleteBranch = await prompts(question);
+      let questionDeleteBranch = await prompts(question);
 
-    if (questionForceDelete.value.length > 1) {
-      questionForceDelete.value.forEach(async item => {
-        await git.deleteBranch(item).catch(async error => {
-          await checkError(error, item);
+      if (!questionDeleteBranch.value) {
+        console.log('Nothing selected.');
+        process.exit(0);
+      }
+
+      if (questionDeleteBranch.value.length > 1) {
+        questionDeleteBranch.value.forEach(async item => {
+          await git.deleteBranch(item).catch(async error => {
+            await checkError(error, item);
+          });
         });
-      });
-    } else {
-      await git.deleteBranch(item).catch(async error => {
-        if (error.indexOf('not fully merged')) {
-          await checkError(error, item);
-        }
-      });
-    }
+      } else if (questionDeleteBranch.value.length === 1) {
+        await git.deleteBranch(item).catch(async error => {
+          if (error.indexOf('not fully merged')) {
+            await checkError(error, item);
+          }
+        });
+      } else {
+        console.log('Nothing selected.');
+      }
+    });
+  })
+  .catch(error => {
+    console.log('Error occured: ' + error);
   });
-});
 
 // branches should be present on local, but not on origin
 // if branch exists on origin, delete?

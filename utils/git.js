@@ -21,7 +21,9 @@ async function deleteBranch(branch) {
   */
   const args = ['branch', '-d', branch]
 
-  await execGit(args);
+  await execGit(args).then(() => {
+    console.log(chalk.yellow('Deleted ' + branch));
+  });
 }
 
 async function forceDeleteBranch(branch) {
@@ -31,7 +33,9 @@ async function forceDeleteBranch(branch) {
 
   const args = ['branch', '-D', branch];
 
-  await execGit(args);
+  await execGit(args).then(() => {
+    console.log(chalk.yellow('Force deleted ' + branch));
+  });
 }
 
 function execGit(args) {
