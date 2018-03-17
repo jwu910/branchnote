@@ -4,18 +4,6 @@ function buildListArray(refs) {
   return getRemotes();
 }
 
-async function checkoutBranch(branch, remote) {
-  /*
-  Pull branch information from selection and pass as args to execGit().
-  */
-  const branchPath =
-    remote && remote !== 'local' ? [remote, branch].join('/') : branch;
-
-  const args = ['checkout', branchPath];
-
-  await execGit(args);
-}
-
 async function createBranch(branch) {
   /*
   Create branch
@@ -35,6 +23,16 @@ async function currentBranch() {
 
   return retVal;
 }
+
+async function deleteBranch(branch) {
+  /*
+  Delete all branches in passed array.
+  */
+  const args = ['branch', '-d', branch]
+
+  await execGit(args);
+}
+
 
 function execGit(args) {
   /*
@@ -142,10 +140,10 @@ async function getRemotes() {
 }
 
 module.exports = {
-  buildListArray: buildListArray,
-  checkoutBranch: checkoutBranch,
-  createBranch: createBranch,
-  currentBranch: currentBranch,
-  fetchBranches: fetchBranches,
-  filterDiffs: filterDiffs,
+  buildListArray,
+  createBranch,
+  currentBranch,
+  deleteBranch,
+  fetchBranches,
+  filterDiffs,
 };

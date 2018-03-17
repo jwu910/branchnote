@@ -16,7 +16,7 @@ const { populateList } = require('./utils/prompts');
 git.buildListArray()
   .then(result => {
     git.filterDiffs(result)
-      .then( res => {
+      .then(async res => {
         const choices = populateList(res);
 
         const question = {
@@ -32,8 +32,11 @@ git.buildListArray()
             ' - Space to select. Return to submit'
         };
 
-        let response = prompts(question);
+        let response = await prompts(question);
 
+        response.value.forEach(item => {
+          git.deleteBranch(item);
+        });
       });
   });
 
