@@ -72,7 +72,6 @@ git.buildListArray().then(result => {
       questionForceDelete.value.forEach(async item => {
         await git.deleteBranch(item).catch(async error => {
           await checkError(error, item);
-          }
         });
       });
     } else {
