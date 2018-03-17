@@ -32,10 +32,27 @@ git.buildListArray()
             ' - Space to select. Return to submit'
         };
 
-        let response = await prompts(question);
+        let questionDeleteBranch = await prompts(question);
 
-        response.value.forEach(item => {
-          git.deleteBranch(item);
+        questionDeleteBranch.value.forEach(item => {
+          git.deleteBranch(item).catch(async error => {
+            if (error.indexOf('not fully merged')) {
+          
+              // generate question 
+              const confirm = {
+                type: 'confirm',
+                name: 'value',
+                message: `There is unmerged work in ${chalk.red(item)}. Are you sure you want to delete?`,
+                initial: false
+              }
+
+              let questionForceDelete = await prompts(confirm);
+
+              console.log(questionForceDelete);
+
+              
+            }
+          });
         });
       });
   });

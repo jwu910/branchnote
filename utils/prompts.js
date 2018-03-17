@@ -3,7 +3,7 @@ const chalk = require('chalk');
 
 function populateList(array, message) {
   let retVal = [];
-console.log(array);
+
   array.forEach(line => {
     if (line[0] !== '*') {
       let titleText;
