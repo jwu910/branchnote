@@ -13,6 +13,7 @@ const git = require('./utils/git');
 const { populateList } = require('./utils/prompts');
 
 async function checkError(error, item) {
+  console.log('Were in checkError(). Expecting (error, item)');
   switch (error) {
     case error.indexOf('not fully merged'):
       await confirmDelete(item);
@@ -77,19 +78,25 @@ git
 
       if (questionDeleteBranch.value.length > 1) {
         questionDeleteBranch.value.forEach(async item => {
+          console.log('Current Branch is: ' + item);
+
           await git.deleteBranch(item).catch(async error => {
             await checkError(error, item);
           });
         });
       } else if (questionDeleteBranch.value.length === 1) {
-        await git.deleteBranch(item).catch(async error => {
+        const branch = questionDeleteBranch.value;
+
+        await git.deleteBranch(branch).catch(async error => {
           if (error.indexOf('not fully merged')) {
-            await checkError(error, item);
+            await checkError(error, branch);
           }
         });
       } else {
         console.log('Nothing selected.');
       }
+    }).catch(error => {
+      console.log('Error occured: ' + error);
     });
   })
   .catch(error => {
